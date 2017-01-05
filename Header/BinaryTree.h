@@ -1,6 +1,11 @@
 #ifndef BinaryTreeDec
 #define BinaryTreeDec
 
+enum TreeExceptions
+{
+    NO_SMALLER_ELEMENT
+};
+
 template <typename VarType>
 struct Tree_Node
 {
@@ -37,9 +42,15 @@ class BinaryTree
 
     private:
 
-    void add(const VarType& what, Tree_Node<VarType>* node);
-    void remove_node(Tree_Node<VarType>* cur);
-    void copy_node(Tree_Node<VarType> destination, Tree_Node<VarType>* source);
+    Tree_Node<VarType>* FindSmallest(Tree_Node<VarType>*& node);
+
+    Tree_Node<VarType>* FindBiggest(Tree_Node<VarType>*& node);
+
+    void add(const VarType& what, Tree_Node<VarType>*& node);
+
+    void remove_node(Tree_Node<VarType>*& cur);
+
+    void copy_node(Tree_Node<VarType>*& destination, Tree_Node<VarType>* source);
 
     Tree_Node<VarType>* top;
 };
