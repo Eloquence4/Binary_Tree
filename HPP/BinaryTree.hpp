@@ -43,6 +43,42 @@ inline bool BinaryTree<VarType>::Remove(const VarType& key)
     try
     {
         Tree_Node<VarType>*& target = Find(top, key);
+
+        if(target->Occurances > 1)
+            target->Occurances--;
+        else if(target->Left && target->Right)
+        {
+            Tree_Node<VarType>* temp = target;
+
+            if((size_t)&target & 2) // Some randomness when it choses Left or Right
+                target = FindSmallest(target->Right);
+            else
+                target = FindBiggest(target->Left);
+
+            target->Left = temp->Left;
+            target->Right = temp->Right;
+
+            delete temp;
+        }
+        else if(target->Left || target->Right)
+        {
+            Tree_Node<VarType>* temp = target;
+
+            if(target->Left)
+                target = target->Left;
+            else if(target->Right)
+                target = target->Right;
+
+            delete temp;
+        }
+        else
+        {
+            delete target;
+
+            target = nullptr;
+        }
+
+        return true;
     }
     catch(TreeExceptions& err)
     {
@@ -51,40 +87,6 @@ inline bool BinaryTree<VarType>::Remove(const VarType& key)
         else
             throw err;
     }
-
-    if(target->Left && target->Right)
-    {
-        Tree_Node<VarType>* temp = target;
-
-        if((size_t)&target & 2) // Some randomness when it choses Left or Right
-            target = FindSmallest(target->Right);
-        else
-            target = FindBiggest(target->Left);
-
-        target->Left = temp->Left;
-        target->Right = temp->Right;
-
-        delete temp;
-    }
-    else if(target->Left || target->Right)
-    {
-        Tree_Node<VarType>* temp = target;
-
-        if(target->Left)
-            target = target->Left;
-        else if(target->Right)
-            target = target->Right;
-
-        delete temp;
-    }
-    else
-    {
-        delete target;
-
-        target = nullptr;
-    }
-
-    return true;
 }
 
 ////////////////////////////////////////////// Private
@@ -141,8 +143,9 @@ inline void BinaryTree<VarType>::add(const VarType& what, Tree_Node<VarType>*& n
     else
         if(what < node->Data)
             add(what, node->Left);
-        else
+        else if(what > node->Data)
             add(what, node->Right);
+        else node->occurances++;
 }
 
 template<typename VarType>

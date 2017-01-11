@@ -148,7 +148,9 @@ private:
 
     void remove(Tree_Node<VarType>*& node)
     {
-        if(node->Left && node->Right)
+        if(node->Occurances > 1)
+            node->Occurances--;
+        else if(node->Left && node->Right)
         {
             Tree_Node<VarType>* temp = node;
 

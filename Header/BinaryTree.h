@@ -13,14 +13,16 @@ enum TreeExceptions
 template <typename VarType>
 struct Tree_Node
 {
+    size_t Occurances;
     VarType Data;
     Tree_Node* Left;
     Tree_Node* Right;
 
-    Tree_Node(const VarType& _Data = VarType(), Tree_Node* _Left = nullptr, Tree_Node* _Right = nullptr)
+    Tree_Node(const VarType& _Data = VarType(), Tree_Node* _Left = nullptr, Tree_Node* _Right = nullptr, size_t _Occurances = 1)
         : Data(_Data)
         , Left(_Left)
         , Right(_Right)
+        , Occurances(_Occurances)
     { }
 };
 
