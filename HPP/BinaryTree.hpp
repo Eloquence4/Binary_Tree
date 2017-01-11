@@ -32,12 +32,64 @@ inline BinaryTree<VarType>& BinaryTree<VarType>::operator=(const BinaryTree<VarT
 ////////////////////////////////////////////// Public
 
 template<typename VarType>
-inline void BinaryTree<VarType>::add(const VarType& what)
+inline void BinaryTree<VarType>::Add(const VarType& what)
 {
     add(what, top);
 }
 
+template<typename VarType>
+inline void BinaryTree<VarType>::Remove(const VarType & key)
+{
+    Tree_Node<VarType>*& target = Find(top, key);
+
+    if(target->Left && target->Right)
+    {
+        Tree_Node<VarType>* temp = target;
+
+        if((size_t)&target & 2) // Some randomness when it choses Left or Right
+            target = FindSmallest(target->Right);
+        else
+            target = FindBiggest(target->Left);
+
+        target->Left = temp->Left;
+        target->Right = temp->Right;
+
+        delete temp;
+    }
+    else if(target->Left || target->Right)
+    {
+        Tree_Node<VarType>* temp = target;
+
+        if(target->Left)
+            target = target->Left;
+        else if(target->Right)
+            target = target->Right;
+
+        delete temp;
+    }
+    else
+    {
+        delete target;
+
+        target = nullptr;
+    }
+}
+
 ////////////////////////////////////////////// Private
+
+template<typename VarType>
+inline Tree_Node<VarType>*& BinaryTree<VarType>::Find(Tree_Node<VarType>*& node, const VarType& key)
+{
+    if(node == nullptr)
+        throw NOT_FOUND;
+
+    if(key > node->Data)
+        return Find(node->Right, key);
+    if(key < node->Data)
+        return Find(node->Left, key);
+
+    return node;
+}
 
 template<typename VarType>
 inline Tree_Node<VarType>* BinaryTree<VarType>::FindSmallest(Tree_Node<VarType>*& node)
@@ -58,7 +110,7 @@ template<typename VarType>
 inline Tree_Node<VarType>* BinaryTree<VarType>::FindBiggest(Tree_Node<VarType>*& node)
 {
     if(node->Right != nullptr)
-        return FindSmallest(node->Left);
+        return FindBiggest(node->Right);
     else
     {
         Tree_Node<VarType>* temp = node;
