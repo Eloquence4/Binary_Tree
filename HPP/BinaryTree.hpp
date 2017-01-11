@@ -38,7 +38,7 @@ inline void BinaryTree<VarType>::Add(const VarType& what)
 }
 
 template<typename VarType>
-inline void BinaryTree<VarType>::Remove(const VarType & key)
+inline bool BinaryTree<VarType>::Remove(const VarType& key)
 {
     try
     {
@@ -47,7 +47,7 @@ inline void BinaryTree<VarType>::Remove(const VarType & key)
     catch(TreeExceptions& err)
     {
         if(err == NOT_FOUND)
-            return;
+            return false;
         else
             throw err;
     }
@@ -83,6 +83,8 @@ inline void BinaryTree<VarType>::Remove(const VarType & key)
 
         target = nullptr;
     }
+
+    return true;
 }
 
 ////////////////////////////////////////////// Private

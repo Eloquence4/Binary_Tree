@@ -38,7 +38,8 @@ public:
     // O(logN), adds an element
     void Add(const VarType& what);
     // O(logN) or O(2logN), removes and element, O(logN) to find it, and another O(logN) to find a replacement if it has 2 children
-    void Remove(const VarType& key);
+    // Returns true if it found and removed an element, false if it did not find one
+    bool Remove(const VarType& key);
 
 #include "../HPP/BinaryTreeIterator.hpp"
 
