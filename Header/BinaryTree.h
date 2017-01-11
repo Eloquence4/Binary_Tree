@@ -35,16 +35,21 @@ public:
     BinaryTree<VarType>& operator=(const BinaryTree<VarType>& rhs);
     /////
 
+    // O(logN), adds an element
     void Add(const VarType& what);
+    // O(logN) or O(2logN), removes and element, O(logN) to find it, and another O(logN) to find a replacement if it has 2 children
     void Remove(const VarType& key);
 
 #include "../HPP/BinaryTreeIterator.hpp"
 
+    // O(1), creates and iterator that targets the top element
     TreeIterator Top()
     {
         return TreeIterator(top);
     }
 
+    // O(logN), finds an element
+    // Unstable, throws NOT_FOUND if it does not find an element with the key
     TreeIterator Search(const VarType& key)
     {
         return search(top, key);

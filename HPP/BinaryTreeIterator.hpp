@@ -7,6 +7,8 @@ class TreeIterator
 
 public:
 
+    // O(1), returns the data of the node the iterator is holding
+    // Unstable, throws INVALID_ITERATOR
     VarType& data()
     {
         if(ptr == nullptr)
@@ -15,11 +17,15 @@ public:
         return ptr->Data;
     }
 
+    // O(logN), returns and iterator to the target, does not change this iterator
+    // Unstable, throws ITERATOR_NOT_FOUND
     TreeIterator search(const VarType& key)
     {
         return search(ptr, key);
     }
 
+    // O(1), returns the data as a constant
+    // Unstable, throws INVALID_ITERATOR
     const VarType& data() const
     {
         if(ptr == nullptr)
@@ -28,6 +34,8 @@ public:
         return ptr->Data;
     }
 
+    // O(1), the iterator goes to the left child
+    // Unstable, throws IT_NO_LEFT_CHILD
     TreeIterator& operator++()
     {
         if(ptr->Left == nullptr)
@@ -36,11 +44,15 @@ public:
         ptr = ptr->Left;
     }
 
+    // O(1), the iterator goes to the left child
+    // Unstable, throws IT_NO_LEFT_CHILD
     void GoLeft()
     {
         ++(*this);
     }
 
+    // O(1), the iterator goes to the right child
+    // Unstable, throws IT_NO_RIGHT_CHILD
     TreeIterator operator++(int)
     {
         if(ptr->Right == nullptr)
@@ -49,11 +61,14 @@ public:
         ptr = ptr->Right;
     }
 
+    // O(1), the iterator goes to the right child
+    // Unstable, throws IT_NO_RIGHT_CHILD
     void GoRight()
     {
         (*this)++;
     }
 
+    // O(1), checks if the target of the iterator is a leaf
     bool leaf() const
     {
         if(ptr->Left || ptr->Right)
@@ -62,13 +77,19 @@ public:
         return true;
     }
 
+    // O(1) or O(logN) if there are children on both sides, removes left child
     void remove_left()
     {
+        if(ptr->Left == nullptr)
+            return;
         remove(ptr->Left);
     }
 
+    // O(1) or O(logN) if there are children on both sides, removes right child
     void remove_right()
     {
+        if(ptr->Right == nullptr)
+            return;
         remove(ptr->Right);
     }
 

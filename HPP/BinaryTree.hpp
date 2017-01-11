@@ -40,7 +40,17 @@ inline void BinaryTree<VarType>::Add(const VarType& what)
 template<typename VarType>
 inline void BinaryTree<VarType>::Remove(const VarType & key)
 {
-    Tree_Node<VarType>*& target = Find(top, key);
+    try
+    {
+        Tree_Node<VarType>*& target = Find(top, key);
+    }
+    catch(TreeExceptions& err)
+    {
+        if(err == NOT_FOUND)
+            return;
+        else
+            throw err;
+    }
 
     if(target->Left && target->Right)
     {
