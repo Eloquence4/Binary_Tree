@@ -38,6 +38,12 @@ inline void BinaryTree<VarType>::Add(const VarType& what)
 }
 
 template<typename VarType>
+inline void BinaryTree<VarType>::Add(VarType && what)
+{
+    add(std::move(what), top);
+}
+
+template<typename VarType>
 inline bool BinaryTree<VarType>::Remove(const VarType& key)
 {
     try
@@ -50,10 +56,8 @@ inline bool BinaryTree<VarType>::Remove(const VarType& key)
         {
             Tree_Node<VarType>* temp = target;
 
-            if((size_t)&target & 2) // Some randomness when it choses Left or Right
-                target = FindSmallest(target->Right);
-            else
-                target = FindBiggest(target->Left);
+            // Some randomness when it choses Left or Right (No idea if it works)
+            target = (size_t)&target & 16 ? FindSmallest(target->Right) : FindBiggest(target->Left);
 
             target->Left = temp->Left;
             target->Right = temp->Right;
@@ -64,10 +68,7 @@ inline bool BinaryTree<VarType>::Remove(const VarType& key)
         {
             Tree_Node<VarType>* temp = target;
 
-            if(target->Left)
-                target = target->Left;
-            else if(target->Right)
-                target = target->Right;
+            target = target->Left ? target->Left : target->Right;
 
             delete temp;
         }
@@ -140,6 +141,19 @@ inline void BinaryTree<VarType>::add(const VarType& what, Tree_Node<VarType>*& n
 {
     if(node == nullptr)
         node = new Tree_Node<VarType>(what);
+    else
+        if(what < node->Data)
+            add(what, node->Left);
+        else if(what > node->Data)
+            add(what, node->Right);
+        else node->Occurrences++;
+}
+
+template<typename VarType>
+inline void BinaryTree<VarType>::add(VarType&& what, Tree_Node<VarType>*& node)
+{
+    if(node == nullptr)
+        node = new Tree_Node<VarType>(std::move(what));
     else
         if(what < node->Data)
             add(what, node->Left);
