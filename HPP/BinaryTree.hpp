@@ -44,8 +44,8 @@ inline bool BinaryTree<VarType>::Remove(const VarType& key)
     {
         Tree_Node<VarType>*& target = Find(top, key);
 
-        if(target->Occurances > 1)
-            target->Occurances--;
+        if(target->Occurrences > 1)
+            target->Occurrences--;
         else if(target->Left && target->Right)
         {
             Tree_Node<VarType>* temp = target;
@@ -145,7 +145,7 @@ inline void BinaryTree<VarType>::add(const VarType& what, Tree_Node<VarType>*& n
             add(what, node->Left);
         else if(what > node->Data)
             add(what, node->Right);
-        else node->occurances++;
+        else node->Occurrences++;
 }
 
 template<typename VarType>
