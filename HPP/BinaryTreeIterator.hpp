@@ -1,6 +1,10 @@
 #ifndef BinaryTreeIteratorDef
 #define BinaryTreeIteratorDef
 
+#include <cstddef>
+#include <cstdint>
+#include "BinaryTree.h"
+
 class TreeIterator
 {
     friend class BinaryTree;
@@ -9,8 +13,7 @@ public:
 
     // O(1), returns the data of the node the iterator is holding
     // Unstable, throws INVALID_ITERATOR
-    VarType& data()
-    {
+    VarType& data() {
         if(ptr == nullptr)
             throw INVALID_ITERATOR;
 
@@ -19,15 +22,13 @@ public:
 
     // O(logN) and O(N) in the worst case, returns and iterator to the target, does not change this iterator
     // Unstable, throws ITERATOR_NOT_FOUND
-    TreeIterator search(const VarType& key)
-    {
+    TreeIterator search(const VarType& key) {
         return search(ptr, key);
     }
 
     // O(1), returns the data as a constant
     // Unstable, throws INVALID_ITERATOR
-    const VarType& data() const
-    {
+    const VarType& data() const {
         if(ptr == nullptr)
             throw INVALID_ITERATOR;
 
@@ -36,8 +37,7 @@ public:
 
     // O(1), the iterator goes to the left child
     // Unstable, throws IT_NO_LEFT_CHILD
-    TreeIterator& operator++()
-    {
+    TreeIterator& operator++() {
         if(ptr->Left == nullptr)
             throw IT_NO_LEFT_CHILD;
 
@@ -48,15 +48,13 @@ public:
 
     // O(1), the iterator goes to the left child
     // Unstable, throws IT_NO_LEFT_CHILD
-    void GoLeft()
-    {
+    void GoLeft() {
         ++(*this);
     }
 
     // O(1), the iterator goes to the right child
     // Unstable, throws IT_NO_RIGHT_CHILD
-    TreeIterator operator++(int)
-    {
+    TreeIterator operator++(int) {
         if(ptr->Right == nullptr)
             throw IT_NO_RIGHT_CHILD;
 
@@ -67,14 +65,12 @@ public:
 
     // O(1), the iterator goes to the right child
     // Unstable, throws IT_NO_RIGHT_CHILD
-    void GoRight()
-    {
+    void GoRight() {
         (*this)++;
     }
 
     // O(1), checks if the target of the iterator is a leaf
-    bool leaf() const
-    {
+    bool leaf() const {
         if(ptr->Left || ptr->Right)
             return false;
         
@@ -82,37 +78,33 @@ public:
     }
 
     // O(1) or O(logN) if there are children on both sides, removes left child
-    void remove_left()
-    {
+    void remove_left() {
         if(ptr->Left == nullptr)
             return;
+
         remove(ptr->Left);
     }
 
     // O(1) or O(logN) if there are children on both sides, removes right child
-    void remove_right()
-    {
+    void remove_right() {
         if(ptr->Right == nullptr)
             return;
+
         remove(ptr->Right);
     }
 
     // O(1) or O(logN), if node has no children, return to the top
-    void remove()
-    {
-        if(ptr->Occurrences > 1)
+    void remove() {
+        if(ptr->Occurrences > 1) {
             ptr->Occurrences--;
-        else if(ptr->Left && ptr->Right)
-        {
+        } else if(ptr->Left && ptr->Right) {
             // Some randomness when chosing which side to reduce by 1, no idea if this works
             Tree_Node<VarType>* temp = (size_t)&ptr & 16 ? FindSmallest(ptr->Right) : FindBiggest(ptr->Left);
 
             ptr->Data = std::move(temp->Data);
 
             delete temp;
-        }
-        else if(ptr->Left || ptr->Right)
-        {
+        } else if(ptr->Left || ptr->Right) {
             Tree_Node<VarType>* temp = ptr->Left ? ptr->Left : ptr->Right;
 
             ptr->Data = std::move(temp->Data);
@@ -121,9 +113,7 @@ public:
 			ptr->Right = temp->Right;
 
             delete temp;
-        }
-        else
-        {
+        } else {
             delete ptr;
 
             if(top == ptr)
@@ -145,25 +135,21 @@ private:
         , ptr(_ptr)
     { };
 
-    TreeIterator search(Tree_Node<VarType>* node, const VarType& key)
-    {
+    TreeIterator search(Tree_Node<VarType>* node, const VarType& key) {
         if(node == nullptr)
             throw NOT_FOUND;
 
-        if(key > node->Data)
-            return search(node->Right, key);
-        else if(key < node->Data)
-            return search(node->Left, key);
-        else
-            return TreeIterator(top, node);
+        return key > node->Data
+               ? search(node->Right, key)
+               : key < node->Data
+                 ? search(node->Left, key)
+                 : TreeIterator(top, node);
     }
 
-    Tree_Node<VarType>* FindSmallest(Tree_Node<VarType>*& node)
-    {
-        if(node->Left != nullptr)
+    Tree_Node<VarType>* FindSmallest(Tree_Node<VarType>*& node) {
+        if(node->Left != nullptr) {
             return FindSmallest(node->Left);
-        else
-        {
+        } else {
             Tree_Node<VarType>* temp = node;
 
             node = nullptr;
@@ -172,12 +158,10 @@ private:
         }
     }
 
-    Tree_Node<VarType>* FindBiggest(Tree_Node<VarType>*& node)
-    {
-        if(node->Right != nullptr)
+    Tree_Node<VarType>* FindBiggest(Tree_Node<VarType>*& node) {
+        if(node->Right != nullptr) {
             return FindSmallest(node->Left);
-        else
-        {
+        } else {
             Tree_Node<VarType>* temp = node;
 
             node = nullptr;
@@ -186,12 +170,10 @@ private:
         }
     }
 
-    void remove(Tree_Node<VarType>*& node)
-    {
-        if(node->Occurrences > 1)
+    void remove(Tree_Node<VarType>*& node) {
+        if(node->Occurrences > 1) {
             node->Occurrences--;
-        else if(node->Left && node->Right)
-        {
+        } else if(node->Left && node->Right) {
             Tree_Node<VarType>* temp = node;
 
             // Some randomness when it choses Left or Right, no idea if this works
@@ -201,17 +183,13 @@ private:
             node->Right = temp->Right;
 
             delete temp;
-        }
-        else if(node->Left || node->Right)
-        {
+        } else if(node->Left || node->Right) {
             Tree_Node<VarType>* temp = node;
             
             node = node->Left ? node->Left : node->Right;
 
             delete temp;
-        }
-        else
-        {
+        } else {
             delete node;
 
             if(top == node)

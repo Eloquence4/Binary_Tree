@@ -1,8 +1,10 @@
-#ifndef BinaryTreeDec
-#define BinaryTreeDec
+#ifndef BINARY_TREE_DEF
+#define BINARY_TREE_DEF
 
-enum TreeExceptions
-{
+#include <cstdint>
+#include <cstddef>
+
+enum TreeExceptions {
     NO_SMALLER_ELEMENT,
     INVALID_ITERATOR,
     IT_NO_LEFT_CHILD,
@@ -11,8 +13,7 @@ enum TreeExceptions
 };
 
 template <typename VarType>
-struct Tree_Node
-{
+struct Tree_Node {
     size_t Occurrences;
     VarType Data;
     Tree_Node* Left;
@@ -29,8 +30,7 @@ struct Tree_Node
 // A binary tree, reaquires the VarType class to have operator>, < and == defined.
 
 template <typename VarType>
-class BinaryTree
-{
+class BinaryTree {
 public:
     // G4
     BinaryTree();
@@ -49,36 +49,30 @@ public:
 #include "../HPP/BinaryTreeIterator.hpp"
 
     // O(1), creates and iterator that targets the top element
-    TreeIterator Top()
-    {
+    TreeIterator Top() {
         return TreeIterator(top);
     }
 
     // O(logN) or O(N) in the worst case scenario, finds an element
     // Unstable, throws NOT_FOUND if it does not find an element with the key
-    TreeIterator Search(const VarType& key)
-    {
+    TreeIterator Search(const VarType& key) {
         return search(top, key);
     }
 
 private:
 
-    Tree_Node<VarType>*& Find(Tree_Node<VarType>*& node, const VarType& key);
+    Tree_Node<VarType>*& Find        (Tree_Node<VarType>*& node, const VarType& key);
+    Tree_Node<VarType>*  FindSmallest(Tree_Node<VarType>*& node);
+    Tree_Node<VarType>*  FindBiggest (Tree_Node<VarType>*& node);
 
-    Tree_Node<VarType>* FindSmallest(Tree_Node<VarType>*& node);
-
-    Tree_Node<VarType>* FindBiggest(Tree_Node<VarType>*& node);
-
-    void add(const VarType& what, Tree_Node<VarType>*& node);
-
-    void add(VarType&& what, Tree_Node<VarType>*& node);
+    void add(const VarType&  what, Tree_Node<VarType>*& node);
+    void add(      VarType&& what, Tree_Node<VarType>*& node);
 
     void remove_node(Tree_Node<VarType>*& cur);
 
     void copy_node(Tree_Node<VarType>*& destination, Tree_Node<VarType>* source);
 
-    TreeIterator search(Tree_Node<VarType>* node, const VarType& key)
-    {
+    TreeIterator search(Tree_Node<VarType>* node, const VarType& key) {
         if(node == nullptr)
             throw NOT_FOUND;
 
@@ -95,4 +89,6 @@ private:
 
 #include "../HPP/BinaryTree.hpp"
 
-#endif // BinaryTreeDec
+#define BINARY_TREE_END_DEF
+
+#endif // BINARY_TREE_DEF
